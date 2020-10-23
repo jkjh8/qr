@@ -3,11 +3,11 @@
     <v-app-bar flat app color="white">
       <v-spacer/>
       <div class="text-overline font-weight-light" >
-        {{ ipaddress }}
+        {{ value }}
       </div>
     </v-app-bar>
     <v-main app >
-      <qrcode-vue :value="value" :size="size" level="H"></qrcode-vue>
+      <qrcode-vue :value="value" :size="size" level="H" class="img_center"></qrcode-vue>
     </v-main>
     <v-footer app color="white" class="text-overline font-weight-light">
       <v-row align="center" justify="center">
@@ -18,32 +18,37 @@
       ></v-img>
         Media Consulting
       </v-row>
-      
     </v-footer>
   </v-app>
 </template>
 
 <script>
-import myip from 'quick-local-ip'
+import axios from 'axios'
 import QrcodeVue from 'qrcode.vue'
 export default {
   name: 'App',
-
   components: {
     QrcodeVue
   },
-
+  mounted () {
+    this.getIp()
+  },
   data: () => ({
-    value: 'http://' + myip.getLocalIP4(),
-    size: 200,
-    // ipaddress: 'http://' + window.location.hostname
-    ipaddress: 'http://' + myip.getLocalIP4()
-  })
+    value: '',
+    size: 200
+  }),
+  methods: {
+    getIp () {
+      axios.get("http://localhost:12300").then(res =>
+        this.value = res.data
+      )
+    }
+  }
 }
 </script>
 
 <style>
-#app {
+.img_center {
   position: fixed;
   top: 40%;
   left: 47%;
@@ -52,5 +57,4 @@ export default {
   width: 200px;
   height: 200px;
 }
-
 </style>
